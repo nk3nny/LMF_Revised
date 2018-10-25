@@ -25,33 +25,12 @@ params [["_spawnPos", [0,0,0]],["_grpType", "TEAM"],["_tickets", 0]];
 _spawnPos = _spawnPos call CBA_fnc_getPos;
 private _range = 500;
 
-//WAIT A RANDOM BIT OF TIME (In case multiple functions are called on 1 location it make spawning a bit smoother)
-sleep (random 10);
-
-
 // PREPARE AND SPAWN THE GROUP ////////////////////////////////////////////////////////////////////
 //NO RESPAWN
-if (_tickets == 0) exitWith {
-	private _type = [_grptype] call _typeMaker;
-	private _grp = [_spawnPos,var_enemySide,_type] call BIS_fnc_spawnGroup;
-
-	_wp = _grp addWaypoint [_spawnPos,0];
-	_wp setWaypointType "GUARD";
-	_grp setFormation "DIAMOND";
-	_grp allowFleeing 0.1;
-
-	waitUntil {sleep 1; behaviour leader _grp == "COMBAT" || {{alive _x} count units _grp < 1}};
-
-	_grp setCombatMode "GREEN";
-	_grp setFormation "LINE";
-	sleep 5 + random 10;
-	_grp setCombatMode "YELLOW";
-
-	0 = [_grp] spawn lmf_ai_fnc_taskAssault;
-};
+if (_tickets == 0) then {_range = 0;}; 
 
 //WITH RESPAWN
-while {_tickets > 0} do {
+for "_i" from 0 to _tickets do {
 	//CECK PROXIMITY
 	private _near = [_spawnPos,_range] call _proximityChecker;
 
@@ -76,8 +55,7 @@ while {_tickets > 0} do {
 
 		0 = [_grp] spawn lmf_ai_fnc_taskAssault;
 
-		//WAIT UNTIL EVERYONE DEAD THEN SUBTRACT TICKET
+		//WAIT UNTIL EVERYONE DEAD
 		waitUntil {sleep 5; {alive _x} count units _grp < 1};
-		_tickets = _tickets - 1;
 	};
 };
