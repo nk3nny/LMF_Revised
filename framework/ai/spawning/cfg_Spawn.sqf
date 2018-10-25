@@ -81,11 +81,11 @@ private _typeMaker = {
 		toUpper _type;
 		_selection = selectRandom _team;
 
-		if (_type == "SQUAD") then {_selection = selectRandom _squad};
-		if (_type == "SENTRY") then {_selection = selectRandom _sentry};
-		if (_type == "ATTEAM") then {_selection = selectRandom _atteam};;
-		if (_type == "AATEAM") then {_selection = selectRandom _aateam};
-		if (_type == "MGTEAM") then {_selection = selectRandom _mgteam};
+		if (_type == "SQUAD") exitWith {_selection = selectRandom _squad};
+		if (_type == "SENTRY") exitWith {_selection = selectRandom _sentry};
+		if (_type == "ATTEAM") exitWith {_selection = selectRandom _atteam};;
+		if (_type == "AATEAM") exitWith {_selection = selectRandom _aateam};
+		if (_type == "MGTEAM") exitWith {_selection = selectRandom _mgteam};
 	};
 	_selection
 };
@@ -96,8 +96,8 @@ private _proximityChecker = {
 	private _targetsToCheck = (switchableUnits + playableUnits - entities "HeadlessClient_F");
 	private _close = false;
 	{
-		private _dist = vehicle _x distance _pos;
-		if (isPlayer _x && {_dist < _range}) then {_close = true};
+		private _dist = vehicle _x distance2D _pos;
+		if (isPlayer _x && {_dist < _range}) exitWith {_close = true};
 	} forEach _targetsToCheck;
 	_close
 };
